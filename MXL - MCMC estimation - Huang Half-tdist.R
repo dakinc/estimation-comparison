@@ -35,9 +35,9 @@ nsample = 30000
 nburnin = 70000
 nskip = 1
 
-#Hyperparameters for Inverse Wishart
-nu = df  #v0 = p
-V = nu * diag(df)   
+#Prior etup
+nu = 2  #v0 = p
+xi = matrix(1,1,df) #larger values provide weakly informative priors on variances  
 
 #Importing data
 xmat=read.table("/xmat.csv",header=TRUE,sep=";")
@@ -129,7 +129,7 @@ for(j in 1:df){
 return(lambdanew)}
 
 ## Function for updating all parameters by using the Gibbs Sampling
-rgibbs = function (nalts,nsets,df,nres,nsample,nburnin,nu,V,y,X){
+rgibbs = function (nalts,nsets,df,nres,nsample,nburnin,nu,xi,y,X){
 #Storage for all draws 
 mudraw = matrix(0,df,nsample)
 Sigmadraw = matrix(0,(df*nsample),df)
@@ -189,7 +189,7 @@ for (s in 1:df){
 	j2 = j1 + (df - s)
 	sigmatruelong[j1:j2,] = sigmatrue[s:df,s]}
 
-estout=rgibbs(nalts,nsets,df,nres,nsample,nburnin,nu,V,y,x)
+estout=rgibbs(nalts,nsets,df,nres,nsample,nburnin,nu,xi,y,x)
 
 #####-----#####-----#####-----#####
 ## Computation of RMSEs
